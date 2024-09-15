@@ -1,0 +1,133 @@
+import java.util.Scanner;
+
+public class TicTacToe {
+
+    // Game board
+    static char[][] board = {
+            {'1', '2', '3'},
+            {'4', '5', '6'},
+            {'7', '8', '9'}
+    };
+
+    // Player turns
+    static char currentPlayer = 'X';
+
+    public static void main(String[] args) {
+        boolean gameWon = false;
+        int totalMoves = 0;
+
+        printBoard(); // Display initial board
+
+        // Main game loop
+        while (!gameWon && totalMoves < 9) {
+            playerMove();
+            printBoard();
+            gameWon = checkWin();
+            if (!gameWon) {
+                switchPlayer();
+            }
+            totalMoves++;
+        }
+
+        if (gameWon) {
+            System.out.println("Player " + currentPlayer + " wins!");
+        } else {
+            System.out.println("It's a draw!");
+        }
+    }
+
+    // Print the game board
+    public static void printBoard() {
+        System.out.println();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                System.out.print(board[i][j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
+    // Handle the player's move
+    public static void playerMove() {
+        Scanner scanner = new Scanner(System.in);
+        int move;
+        boolean validMove = false;
+
+        // Keep asking until a valid move is entered
+        while (!validMove) {
+            System.out.println("Player " + currentPlayer + ", enter your move (1-9): ");
+            move = scanner.nextInt();
+
+            if (move >= 1 && move <= 9 && isValidMove(move)) {
+                placeMove(move);
+                validMove = true;
+            } else {
+                System.out.println("Invalid move! Try again.");
+            }
+        }
+    }
+
+    // Check if the move is valid
+    public static boolean isValidMove(int move) {
+        switch (move) {
+            case 1: return board[0][0] == '1';
+            case 2: return board[0][1] == '2';
+            case 3: return board[0][2] == '3';
+            case 4: return board[1][0] == '4';
+            case 5: return board[1][1] == '5';
+            case 6: return board[1][2] == '6';
+            case 7: return board[2][0] == '7';
+            case 8: return board[2][1] == '8';
+            case 9: return board[2][2] == '9';
+            default: return false;
+        }
+    }
+
+    // Place the player's move on the board
+    public static void placeMove(int move) {
+        char symbol = currentPlayer;
+
+        switch (move) {
+            case 1: board[0][0] = symbol; break;
+            case 2: board[0][1] = symbol; break;
+            case 3: board[0][2] = symbol; break;
+            case 4: board[1][0] = symbol; break;
+            case 5: board[1][1] = symbol; break;
+            case 6: board[1][2] = symbol; break;
+            case 7: board[2][0] = symbol; break;
+            case 8: board[2][1] = symbol; break;
+            case 9: board[2][2] = symbol; break;
+            default: System.out.println("Invalid move.");
+        }
+    }
+
+    // Switch to the other player
+    public static void switchPlayer() {
+        currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+    }
+
+    // Check if the game is won
+    public static boolean checkWin() {
+        // Check rows, columns, and diagonals
+        return (checkRow(0) || checkRow(1) || checkRow(2) || 
+                checkColumn(0) || checkColumn(1) || checkColumn(2) || 
+                checkDiagonals());
+    }
+
+    // Check if a row has the same symbols
+    public static boolean checkRow(int row) {
+        return board[row][0] == board[row][1] && board[row][1] == board[row][2];
+    }
+
+    // Check if a column has the same symbols
+    public static boolean checkColumn(int col) {
+        return board[0][col] == board[1][col] && board[1][col] == board[2][col];
+    }
+
+    // Check both diagonals
+    public static boolean checkDiagonals() {
+        return (board[0][0] == board[1][1] && board[1][1] == board[2][2]) ||
+               (board[0][2] == board[1][1] && board[1][1] == board[2][0]);
+    }
+}
